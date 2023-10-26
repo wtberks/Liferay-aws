@@ -5,21 +5,18 @@ export interface Configs extends cdk.StackProps {
     account: string;
     region: string;
   },
-  // vpc: {
-  //   name: string;
-  //   id: string;
-  // },
+  vpc: {
+    name: string;
+    id: string;
+  },
   securityGroup: {
     name: string;
   },
-  // database: {
-  //   dbHost: string;
-  //   dbCluster: string;
-  //   username: string;
-  //   password: string;
-  // },
   dbSecret: {
     name: string,
+    dbHost: string;
+    dbUsername: string;
+    dbPassword: string;
   },
   apache: {
     name: string;
@@ -36,22 +33,19 @@ export const configs: Configs = {
     account: '857570805530',
     region: 'us-west-2',
   },
-  // vpc: {
-  //   name: 'DataStack/wtberks-dev-1',  // Sezarching using the vpcName is not working
-  //   id: 'vpc-0c5de25e840205eff',      // Since you have to find a VPC using its ID, make 
-  //                                     // sure to update this value to match the current vc
-  // },
+  vpc: {
+    name: 'wtberks-dev-1',  // Sezarching using the vpcName is not working
+    id: 'vpc-07ff5a0c63e42645d',      // Since you have to find a VPC using its ID, make 
+                                      // sure to update this value to match the current vc
+  },
   securityGroup: {
     name: 'wtberks-1-sg',
   },
-  // database: {
-  //   dbHost: 'databasestack-liferaydba5625353-wjszcamwmzl7.csjgm0bdzltv.us-west-2.rds.amazonaws.com',
-  //   dbCluster: 'datastack-rdsclustera43a99d3-zujkg8ni1tuf',
-  //   username: 'DbAdmin',
-  //   password: 'PasswordForDbAdmin',
-  // },
   dbSecret: {
     name: 'dev/DbPasswordV2',
+    dbHost: 'host',
+    dbUsername: 'username',
+    dbPassword: 'password',
   },
   apache: {
     name: 'ApacheDev',

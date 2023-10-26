@@ -23,8 +23,6 @@ export interface Configs extends cdk.StackProps {
   },
   dbSecret: {
     name: string,
-    username: string;
-    password: string;
   }
   database: {
     name: string;
@@ -65,9 +63,7 @@ export const configs: Configs = {
     name: 'wtberks-1-sg',
   },
   dbSecret: {
-    name: 'dev/DbPasswordV2',
-    username: 'DbAdmin',
-    password: 'PasswordForDbAdmin',
+    name: 'dev/DbPasswordV5',
   },
   database: {
     name: 'LiferayDevDb1',

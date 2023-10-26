@@ -38,14 +38,14 @@ export class DatabaseStack extends cdk.Stack {
     );
 
     // Creating a secret into which we can place info
-    new secretsmanager.Secret(this, configs.dbSecret.name, {
-      secretName: configs.dbSecret.name,
-      secretObjectValue: {
-        username: cdk.SecretValue.unsafePlainText(configs.dbSecret.username),
-        password: cdk.SecretValue.unsafePlainText(configs.dbSecret.password),
-        vpcId: cdk.SecretValue.unsafePlainText(vpc.vpcId),
-      }
-    })
+    // new secretsmanager.Secret(this, configs.dbSecret.name, {
+    //   secretName: configs.dbSecret.name,
+    //   secretObjectValue: {
+    //     username: cdk.SecretValue.unsafePlainText(configs.dbSecret.username),
+    //     password: cdk.SecretValue.unsafePlainText(configs.dbSecret.password),
+    //     vpcId: cdk.SecretValue.unsafePlainText(vpc.vpcId),
+    //   }
+    // })
 
     // Get the DB credentials
     const dbCredentials = secretsmanager.Secret.fromSecretNameV2(

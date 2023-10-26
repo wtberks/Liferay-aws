@@ -15,13 +15,8 @@ export class LiferayStack extends cdk.Stack {
   constructor(scope: Construct, id: string, configs: Configs) {
     super(scope, id, configs);
 
-    // Get the secret as it contains information that we will need
-    const secret = secretsmanager.Secret.fromSecretNameV2(this, 'Secret', configs.dbSecret.name);
-    const vpcId = secret.secretValueFromJson('vpcId').toString();
-    const vpcID = vpcId;
-
     const vpc = ec2.Vpc.fromLookup(this, 'Liferay VPC', {
-      vpcId: vpcID,
+      vpcId: configs.vpc.id,
     });
 
     // Get the Liferay image
@@ -34,12 +29,12 @@ export class LiferayStack extends cdk.Stack {
       }
     );
 
-    // const dbCredentials = secretsmanager.Secret.fromSecretNameV2(
-    //   this, 'DbCredentials', configs.dbSecret.name
-    // );
-    const username = secret.secretValueFromJson('username').toString();
-    const password = secret.secretValueFromJson('password').toString();
-    const dbHost = secret.secretValueFromJson('host').toString();
+    const dbCredentials = secretsmanager.Secret.fromSecretNameV2(
+      this, 'DbCredentials', configs.dbSecret.name
+    );
+    const username = dbCredentials.secretValueFromJson(configs.dbSecret.dbUsername).unsafeUnwrap();
+    const password = dbCredentials.secretValueFromJson(configs.dbSecret.dbPassword).unsafeUnwrap();
+    const dbHost = dbCredentials.secretValueFromJson(configs.dbSecret.dbHost).unsafeUnwrap();
 
     // Create ECS service using the provided image
     this.lifrayServer = new ecsp.ApplicationLoadBalancedFargateService(

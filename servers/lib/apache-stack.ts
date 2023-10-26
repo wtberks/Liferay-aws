@@ -3,7 +3,6 @@ import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecsp from 'aws-cdk-lib/aws-ecs-patterns';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import path = require('path');
 import { Configs, configs } from './configs'
 import { Construct } from 'constructs';
@@ -15,11 +14,8 @@ export class ApacheStack extends cdk.Stack {
   constructor(scope: Construct, id: string, configs: Configs) {
     super(scope, id, configs);
 
-    // Get the secret as it contains information that we will need
-    const secret = secretsmanager.Secret.fromSecretNameV2(this, 'Secret', configs.dbSecret.name);
-
     const vpc = ec2.Vpc.fromLookup(this, 'Liferay VPC', {
-      vpcId: secret.secretValueFromJson('vpcId').toString(),
+      vpcId: configs.vpc.id,
     });
 
     // Get the apache image
