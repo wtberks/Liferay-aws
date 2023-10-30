@@ -55,9 +55,10 @@ export class DatabaseStack extends cdk.Stack {
     // Now, create the database
     const dbInstance = new rds.DatabaseInstance(this, 'liferay-db', {
       vpc: vpc,
-      // vpcSubnets: {
-      //   subnetType: ec2.SubnetType.PUBLIC,
-      // },
+      vpcSubnets: {
+        onePerAz: true,
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
       engine: rds.DatabaseInstanceEngine.mysql({
         version: rds.MysqlEngineVersion.VER_8_0_34,
       }),
@@ -65,6 +66,7 @@ export class DatabaseStack extends cdk.Stack {
         ec2.InstanceClass.BURSTABLE3,
         ec2.InstanceSize.MICRO
       ),
+      port: 3306,
       credentials: rds.Credentials.fromSecret(dbCredentials),
       multiAz: false,
       allocatedStorage: configs.database.allocatedStorage,
@@ -108,7 +110,7 @@ export class DatabaseStack extends cdk.Stack {
       return {
         name: subnet.name,
         cidrMask: subnet.cidrMask,
-        subnetType: subnet.private ? ec2.SubnetType.PRIVATE_WITH_EGRESS : ec2.SubnetType.PUBLIC,
+        subnetType: subnet.private ? ec2.SubnetType.PRIVATE_ISOLATED : ec2.SubnetType.PUBLIC,
       };
     }
   }

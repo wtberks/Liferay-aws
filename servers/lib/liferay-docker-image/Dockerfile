@@ -59,7 +59,7 @@ RUN cd /opt && \
 
 COPY ./configs $LIFERAY_CONFIG_DIR/.
 COPY ./entrypoint.sh /usr/local/bin
-COPY ./ojdbc8.jar $CATALINA_HOME/lib
+COPY ./tomcat-lib $CATALINA_HOME/lib/.
 COPY ./configs/ROOT.xml $CATALINA_HOME/conf/Catalina/localhost/ROOT.xml
 RUN chmod +x /usr/local/bin/entrypoint.sh
 RUN chmod +x $CATALINA_HOME/bin/catalina.sh

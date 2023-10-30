@@ -35,6 +35,7 @@ export class LiferayStack extends cdk.Stack {
     const username = dbCredentials.secretValueFromJson(configs.dbSecret.dbUsername).unsafeUnwrap();
     const password = dbCredentials.secretValueFromJson(configs.dbSecret.dbPassword).unsafeUnwrap();
     const dbHost = dbCredentials.secretValueFromJson(configs.dbSecret.dbHost).unsafeUnwrap();
+    const dbName = configs.database.name;
 
     // Create ECS service using the provided image
     this.lifrayServer = new ecsp.ApplicationLoadBalancedFargateService(
@@ -51,10 +52,11 @@ export class LiferayStack extends cdk.Stack {
               containerName: configs.liferay.name,
               enableLogging: true,
               environment: {
-                // DB_CLUSTER_PLACEHOLDER: configs.database.dbCluster,
-                DB_HOST_PLACEHOLDER: dbHost,
-                DB_USERNAME_PLACEHOLDER: username,
-                DB_PASSWORD_PLACEHOLDER: password,
+                // DB_CLUSTER: configs.database.dbCluster,
+                DB_HOST: dbHost,
+                DB_USERNAME: username,
+                DB_PASSWORD: password,
+                DB_NAME: dbName,
                 //   PROXY_PASS_HOST: props.proxyPassHost? props.proxyPassHost : '',
               }
             },

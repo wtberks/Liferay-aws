@@ -47,11 +47,6 @@ export const configs: Configs = {
         cidrMask: 24,
         private: true,
       },
-      // {
-      //   name: 'wtberks-private-2',
-      //   cidrMask: 24,
-      //   private: true,
-      // },
       {
         name: 'wtberks-public-1',
         cidrMask: 24,

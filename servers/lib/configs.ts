@@ -12,6 +12,9 @@ export interface Configs extends cdk.StackProps {
   securityGroup: {
     name: string;
   },
+  database: {
+    name: string;
+  },
   dbSecret: {
     name: string,
     dbHost: string;
@@ -35,14 +38,17 @@ export const configs: Configs = {
   },
   vpc: {
     name: 'wtberks-dev-1',  // Sezarching using the vpcName is not working
-    id: 'vpc-07ff5a0c63e42645d',      // Since you have to find a VPC using its ID, make 
+    id: 'vpc-0cad3ed27615b6c71',      // Since you have to find a VPC using its ID, make 
                                       // sure to update this value to match the current vc
   },
   securityGroup: {
     name: 'wtberks-1-sg',
   },
+  database: {
+    name: 'LiferayDevDb1',
+  },
   dbSecret: {
-    name: 'dev/DbPasswordV2',
+    name: 'dev/DbPasswordV5',
     dbHost: 'host',
     dbUsername: 'username',
     dbPassword: 'password',

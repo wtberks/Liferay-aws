@@ -54,9 +54,11 @@ prepare_liferay_jdbc_config() {
   sed -i "s|DB_HOST_PLACEHOLDER|${DB_HOST}|g" $LIFERAY_HOME/portal-ext.properties
   sed -i "s|DB_USERNAME_PLACEHOLDER|${DB_USERNAME}|g" $LIFERAY_HOME/portal-ext.properties
   sed -i "s|DB_PASSWORD_PLACEHOLDER|${DB_PASSWORD}|g" $LIFERAY_HOME/portal-ext.properties
-  echo "DB Host: " + ${DB_HOST_PLACEHOLDER}
-  echo "DB username: " + ${DB_USERNAME_PLACEHOLDER}
-  echo "DB password: " + ${DB_PASSWORD_PLACEHOLDER}
+  sed -i "s|DB_NAME_PLACEHOLDER|${DB_NAME}|g" $LIFERAY_HOME/portal-ext.properties
+  echo "DB Host: ${DB_HOST}"
+  echo "DB username: ${DB_USERNAME}"
+  echo "DB password: ${DB_PASSWORD}"
+  echo "DB name: ${DB_NAME}"
 }
 
 show_motd() {
