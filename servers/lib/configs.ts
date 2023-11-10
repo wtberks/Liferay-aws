@@ -24,10 +24,12 @@ export interface Configs extends cdk.StackProps {
   apache: {
     name: string;
     dir: string;
+    uri: string;
   },
   liferay: {
     name: string;
     dir: string;
+    uri: string;
   }
 }
 
@@ -38,7 +40,7 @@ export const configs: Configs = {
   },
   vpc: {
     name: 'wtberks-dev-1',  // Sezarching using the vpcName is not working
-    id: 'vpc-0cad3ed27615b6c71',      // Since you have to find a VPC using its ID, make 
+    id: 'vpc-0a8181a86b72e4e12',      // Since you have to find a VPC using its ID, make 
                                       // sure to update this value to match the current vc
   },
   securityGroup: {
@@ -56,9 +58,11 @@ export const configs: Configs = {
   apache: {
     name: 'ApacheDev',
     dir: 'apache-docker-image-noproxy',
+    uri: 'public.ecr.aws/e8u7y8x6/wtberks/apache:latest',
   },
   liferay: {
     name: 'LiferayDev',
     dir: 'liferay-docker-image',
+    uri: 'public.ecr.aws/e8u7y8x6/wtberks/liferay:latest',
   }
 }

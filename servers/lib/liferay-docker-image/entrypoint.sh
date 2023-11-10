@@ -9,7 +9,7 @@ main() {
   prepare_liferay_tomcat_config
   prepare_liferay_deploy_directory
   prepare_liferay_osgi_configs_directory
-  # initialize_database
+  initialize_database
 
   echo "Start the portal... $@"
   run_portal "$@"
@@ -20,10 +20,14 @@ initialize_database() {
   if [[ ! -f "$LIFERAY_CONFIG_DIR/database.sql" ]]; then
     if ! create_database; then
       echo "Creating the database failed"
+    else
+      echo "Database created"
     fi
   else
     if ! restore_database; then
       echo "Restoring the database failed"
+    else
+      echo "Database restored"
     fi
   fi
 }
@@ -59,6 +63,9 @@ prepare_liferay_jdbc_config() {
   echo "DB username: ${DB_USERNAME}"
   echo "DB password: ${DB_PASSWORD}"
   echo "DB name: ${DB_NAME}"
+
+  echo "******** portal-ext.properties ********"
+  cat $LIFERAY_HOME/portal-ext.properties
 }
 
 show_motd() {

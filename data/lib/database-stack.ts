@@ -12,7 +12,7 @@ export class DatabaseStack extends cdk.Stack {
 
     // Create the VPC
     const vpc = new ec2.Vpc(this, configs.vpc.name, {
-      // cidr: configs.vpc.cidr,
+      cidr: configs.vpc.cidr,
       natGateways: configs.vpc.natGateways,
       vpcName: configs.vpc.name,
       maxAzs: configs.vpc.maxAzs,
@@ -29,13 +29,33 @@ export class DatabaseStack extends cdk.Stack {
 
     securityGroup.addIngressRule(
       ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(22),
+      'Allow SSH access from anywhere',
+    );
+
+    securityGroup.addIngressRule(
+      ec2.Peer.anyIpv4(),
       ec2.Port.tcp(80),
+      'Allow HTTP access from anywhere',
     );
 
     securityGroup.addIngressRule(
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(443),
+      'Allow HTTPS access from anywhere',
     );
+
+    securityGroup.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(3306),
+      'Allow MySQL access from anywhere',
+    )
+
+    securityGroup.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(2049),
+      'Allow NFS access from anywhere',
+    )
 
     // Creating a secret into which we can place info
     // new secretsmanager.Secret(this, configs.dbSecret.name, {
