@@ -13,15 +13,15 @@ export class VpcStack extends cdk.Stack {
 
     // Create the VPC
     const vpc = new ec2.Vpc(this, configs.vpc.name, {
-      cidr: configs.vpc.cidr,
+      ipAddresses: ec2.IpAddresses.cidr(configs.vpc.cidr),
       natGateways: configs.vpc.natGateways,
       vpcName: configs.vpc.name,
       maxAzs: configs.vpc.maxAzs,
-      // subnetConfiguration: this.getSubnets(configs.vpc.subnets),
+      subnetConfiguration: this.getSubnets(configs.vpc.subnets),
+      natGatewaySubnets: {
+        subnetGroupName: configs.vpc.natGatewatSubnetName,
+      },
     });
-
-    // Tag the vpc to make it easier to find
-    // cdk.Aspects.of(vpc).add(new cdk.Tag('app', configs.vpc.tag));
 
     // Next, create a security group
     const securityGroup = new ec2.SecurityGroup(this, configs.securityGroup.name, {
@@ -53,13 +53,13 @@ export class VpcStack extends cdk.Stack {
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(3306),
       'Allow MySQL access from anywhere',
-    )
+    );
 
     securityGroup.addIngressRule(
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(2049),
       'Allow NFS access from anywhere',
-    )
+    );
 
   }
 
@@ -73,10 +73,20 @@ export class VpcStack extends cdk.Stack {
   }
 
   getSubnet(subnet: Subnet): ec2.SubnetConfiguration {
-    return {
-      name: subnet.name,
-      cidrMask: subnet.cidrMask,
-      subnetType: subnet.subnetType,
-    };
+    if (subnet.subnetType == ec2.SubnetType.PUBLIC) {
+      return {
+        name: subnet.name,
+        cidrMask: subnet.cidrMask,
+        subnetType: subnet.subnetType,
+        mapPublicIpOnLaunch: subnet.mapPublicIpOnLanch,
+      };
+    }
+    else {
+      return {
+        name: subnet.name,
+        cidrMask: subnet.cidrMask,
+        subnetType: subnet.subnetType,
+      };
+    }
   }
 }

@@ -9,7 +9,7 @@ main() {
   prepare_liferay_tomcat_config
   prepare_liferay_deploy_directory
   prepare_liferay_osgi_configs_directory
-  # initialize_database
+  initialize_database
 
   echo "Start the portal... $@"
   run_portal "$@"

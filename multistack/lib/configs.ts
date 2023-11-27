@@ -5,6 +5,7 @@ export interface Subnet {
   name: string;
   cidrMask: number;
   subnetType: ec2.SubnetType;
+  mapPublicIpOnLanch: boolean;
 };
 
 export interface Configs extends cdk.StackProps {
@@ -14,6 +15,7 @@ export interface Configs extends cdk.StackProps {
     natGateways: number;
     maxAzs: number;
     subnets: Subnet[],
+    natGatewatSubnetName: string,
   },
   securityGroup: {
     name: string;
@@ -27,7 +29,13 @@ export interface Configs extends cdk.StackProps {
   database: {
     name: string;
     allocatedStorage: number;
+    subnetType: ec2.SubnetType;
     publiclyAccessible: boolean;
+  },
+  ec2Instance: {
+    name: string;
+    subnetType: ec2.SubnetType;
+    keyName: string;
   },
   apache: {
     name: string;
@@ -47,33 +55,37 @@ export const configs: Configs = {
     region: 'us-west-2',
   },
   vpc: {
-    name: 'wtberks-dev-2',
+    name: 'wtberks-dev-27',
     cidr: '10.0.0.0/16',
     natGateways: 1,
     maxAzs: 2,
     subnets: [
       {
         name: 'wtberks-private-1',
-        cidrMask: 24,
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+        cidrMask: 28,
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        mapPublicIpOnLanch: false,
       },
       {
         name: 'wtberks-private-2',
-        cidrMask: 24,
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        cidrMask: 28,
+        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+        mapPublicIpOnLanch: false,
       },
       {
         name: 'wtberks-public-1',
         cidrMask: 24,
         subnetType: ec2.SubnetType.PUBLIC,
-      }
-    ]
+        mapPublicIpOnLanch: true,
+      },
+    ],
+    natGatewatSubnetName: 'wtberks-public-1',
   },
   securityGroup: {
-    name: 'wtberks-1-sg',
+    name: 'wtberks-4-sg',
   },
   dbSecret: {
-    name: 'dev/DbPasswordV5',
+    name: 'dev/DbPasswordV6',
     dbHost: 'host',
     dbUsername: 'username',
     dbPassword: 'password',
@@ -81,7 +93,13 @@ export const configs: Configs = {
   database: {
     name: 'LiferayDevDb1',
     allocatedStorage: 20,
-    publiclyAccessible: true,
+    subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+    publiclyAccessible: false,
+  },
+  ec2Instance: {
+    name: 'ec2-instance',
+    subnetType: ec2.SubnetType.PUBLIC,
+    keyName: 'ec2-key-pair',
   },
   apache: {
     name: 'ApacheDev',

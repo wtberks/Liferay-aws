@@ -17,16 +17,13 @@ export class DatabaseStack extends cdk.Stack {
       }
     });
 
-    // Creating a secret into which we can place info
-    // new secretsmanager.Secret(this, configs.dbSecret.name, {
-    //   secretName: configs.dbSecret.name,
-    //   secretObjectValue: {
-    //     username: cdk.SecretValue.unsafePlainText(configs.dbSecret.username),
-    //     password: cdk.SecretValue.unsafePlainText(configs.dbSecret.password),
-    //     vpcId: cdk.SecretValue.unsafePlainText(vpc.vpcId),
-    //   }
-    // })
-
+    // Get the security group
+    const securityGroup = ec2.SecurityGroup.fromLookupByName(
+      this,
+      id,
+      configs.securityGroup.name,
+      vpc);
+    
     // Get the DB credentials
     const dbCredentials = secretsmanager.Secret.fromSecretNameV2(
       this, 'DbCredentials', configs.dbSecret.name
@@ -35,10 +32,9 @@ export class DatabaseStack extends cdk.Stack {
     // Now, create the database
     const dbInstance = new rds.DatabaseInstance(this, 'liferay-db', {
       vpc: vpc,
-      // vpcSubnets: {
-      //   onePerAz: true,
-      //   subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-      // },
+      vpcSubnets: {
+        subnetType: configs.database.subnetType,
+      },
       engine: rds.DatabaseInstanceEngine.mysql({
         version: rds.MysqlEngineVersion.VER_8_0_34,
       }),
@@ -58,6 +54,7 @@ export class DatabaseStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       deletionProtection: false,
       databaseName: configs.database.name,
+      securityGroups: [ securityGroup ],
       publiclyAccessible: configs.database.publiclyAccessible,
     });
 
